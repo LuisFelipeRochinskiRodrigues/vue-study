@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Study - Form</title>
+</head>
+<body>
+    <!--id app call the objects in script below-->
+    <div id="app"></div>
+
+    <!-- added vue to use it -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <!-- created the vue function -->
+    <script>
+        var app = new Vue({
+            // which div
+            el: '#app',
+            // how the layout will be
+            template:`
+                    <div class="container">
+                        <h1>Commits:</h1>
+                        <hr />
+                        <div class="form-group">
+                            <p>
+                                <input placeholder="Name" type="text" name="name" class="form-control" v-model="name">
+                            </p>
+                            <p>
+                                <input placeholder="City" type="text" name="city" class="form-control" v-model="city">
+                            </p>
+                            <p>
+                                <input placeholder="Country" type="text" name="country" class="form-control" v-model="country">
+                            </p>
+                            <p>
+                                <textarea placeholder="Commit" name="commit" class="form-control" v-model="message"></textarea>
+                            </p>
+                            <button v-on:click="addCommit" type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                        <hr />
+                        <div class="list-group">
+                            <!-- added index to identify the count of commits, that's the way to find and remove the index i want -->
+                            <div class="list-group-item" v-for="(commit, index) in allCommits">
+                                <p><span class="commit_name"><strong>Name:</strong>{{commit.name}}</span></p>
+                                <p><span class="commit_city"><strong>City:</strong>{{commit.city}}</span></p>
+                                <p><span class="commit_country"><strong>Country:</strong>{{commit.country}}</span></p>
+                                <p>Commit:{{commit.message}}</p>
+                                <div>
+                                    <!-- .prevent defines that when clicked on the button do not throw the page to the default#-->
+                                    <a href="#" title="delete" v-on:click.prevent="deleteCommit(index)">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `,
+            //function that needs return
+            data(){
+                return{
+                    //array
+                    commits:[
+                        // {
+                        //     name: 'Ninão',
+                        //     message: 'Test'
+                        // }
+                    ],
+                    name: '',
+                    city:'',
+                    country:'',
+                    message:''
+                }
+            },
+            methods:{
+                addCommit(){
+                    if(this.city.trim() === '' || this.country.trim() === '' || this.message.trim() === ''){
+                        return;
+                    }
+                    console.log("chamando");
+                    console.log(this.name);
+                    console.log(this.city);
+                    console.log(this.country);
+                    console.log(this.message);
+                    this.commits.push({
+                        name: this.name,
+                        city: this.city,
+                        country: this.country,
+                        message: this.message
+                    });
+                    this.name = '',
+                    this.city = '',
+                    this.country = '',
+                    this.message = ''
+                },
+                deleteCommit(index){
+                    console.log(index);
+                    this.commits.splice(index, 1);
+                }
+            },
+            computed:{
+                allCommits(){
+                    return this.commits.map(commit => ({
+                        ...commit,
+                        name: commit.name.trim() === '' ? 'Anonymous' : commit.name
+                    }))
+                }
+            },
+            watch:{
+                commits(val){
+                    console.log('val',val);
+                }
+            }
+            })
+    </script>
+    
+</body>
+</html>
